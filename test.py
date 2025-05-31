@@ -96,6 +96,8 @@ unit = 100
 account_id = "ACCOUNT_ID_P"
 access_token = "ACCESS_TOKEN"
 
+print("test")
+
 fx = fx_trader(account_id=account_id, access_token=access_token, instrument="USD_JPY")
 
 with socketserver.TCPServer(("", 3000), WebhookHandler) as httpd:
