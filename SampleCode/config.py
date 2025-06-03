@@ -1,8 +1,0 @@
-# Oanda APIの認証情報
-
-# デモ口座ID
-ACCOUNT_ID_P = "101-009-12873394-001"
-# 本番口座ID
-ACCOUNT_ID_L = ""
-# APIキー
-ACCESS_TOKEN = "01a4c8176c22e32d9fbb5a05a131bed0-ae32c80737d52951fd16c26af7e096b4"
