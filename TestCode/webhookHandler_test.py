@@ -3,9 +3,8 @@ import socketserver # ネットワーク通信を簡単にするためのモジ�
 from fx_test import fx_trader
 import config_p
 
-account_id = "ACCOUNT_ID_P"
-access_token = "ACCESS_TOKEN"
-
+account_id = config_p.ACCOUNT_ID_P
+access_token = config_p.ACCESS_TOKEN
 
 class WebhookHandler(http.server.BaseHTTPRequestHandler):# ()はクラス継承
     def do_POST(self): # POSTリクエストがこのサーバーに送信された時に実行される
