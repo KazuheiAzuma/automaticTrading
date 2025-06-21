@@ -1,7 +1,7 @@
 from oandapyV20.endpoints import orders, positions # オーダーとポジションのモジュールを取得
 from oandapyV20 import API # class API()でサーバーと接続するクラスを取得
 import datetime # Pythonの標準モジュール。日付や時間を扱う処理が可能になるモジュールを取得
-
+import response_sample
 
 class fx_trader: # FX取引を管理するためのクラス
     def __init__(self, account_id, access_token, instrument, environment="practice"):
@@ -29,9 +29,10 @@ class fx_trader: # FX取引を管理するためのクラス
     
     def positions(self): # 保有ポジション取得の関数
         # 保有ポジションを取得
-        self.r = positions.PositionDetails(accountID=self.account_id, instrument=self.instrument)
-        self.res = self.client.request(self.r) # self.clientでAPIと接続し、requestで送信
-        
+        #self.r = positions.PositionDetails(accountID=self.account_id, instrument=self.instrument)
+        #self.res = self.client.request(self.r) # self.clientでAPIと接続し、requestで送信
+        self.res = response_sample.positionRes #テスト用のレスポンス
+
         # ロングとショートの保有数を抽出
         self.longPositionUnits = int(self.res.get("position").get("long").get("units"))
         self.shortPositionUnits = int(self.res.get("position").get("short").get("units"))
@@ -56,11 +57,13 @@ class fx_trader: # FX取引を管理するためのクラス
             }
             }
             # 新規注文
-            self.r = orders.OrderCreate(accountID=self.account_id, data=self.data)
-            self.res = self.client.request(self.r) # self.clientでAPIと接続し、requestで送信
+            #self.r = orders.OrderCreate(accountID=self.account_id, data=self.data)
+            #self.res = self.client.request(self.r) # self.clientでAPIと接続し、requestで送信
+            #デバッグするにはテスト用のレスポンスを作成すること！
+            self.res = response_sample.orderSres
         
             # 新規注文のログを記録する
-            self.logging("新規注文：約定価格{}、数量{}です".format(unit, self.res.get("price").get("orderFillTransaction")))
+            self.logging("新規注文：約定価格{}、数量{}です".format(self.res.get("orderFillTransaction").get("price"), unit))
         
             return
  

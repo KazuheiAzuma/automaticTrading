@@ -2,9 +2,11 @@ import http.server # Python標準ライブラリ。HTTPサーバーを構築す�
 import socketserver # ネットワーク通信を簡単にするためのモジュール
 from fx_test import fx_trader
 import config_p
+import json
 
 account_id = config_p.ACCOUNT_ID_P
 access_token = config_p.ACCESS_TOKEN
+
 
 class WebhookHandler(http.server.BaseHTTPRequestHandler):# ()はクラス継承
     def do_POST(self): # POSTリクエストがこのサーバーに送信された時に実行される
@@ -26,9 +28,11 @@ class WebhookHandler(http.server.BaseHTTPRequestHandler):# ()はクラス継承
         fx.positions()         
         
         # 新規注文（現在の保有ポジションが0の時に実行される）
-        flag = int(req_body) # 送られきた情報(通貨ペア・数量・注文種類・注文タイプ)を変数に代入
-        fx.order(flag) # 送られてきた情報をorder関数で発注する
-        
+        #flag = int(req_body) # 送られきた情報(通貨ペア・数量・注文種類・注文タイプ)を変数に代入
+        #fx.order(flag) # 送られてきた情報をorder関数で発注する
+        data = json.loads(req_body)
+        fx.order(data['instrument'], data['units'], data['side'], data['type'])
+
         # 決済注文（現在の保有ポジションが0の以外の時に実行される）
         fx.close() # ポジションを決済し、損益を確定
         
@@ -39,6 +43,8 @@ class WebhookHandler(http.server.BaseHTTPRequestHandler):# ()はクラス継承
 
 fx = fx_trader(instrument="USD_JPY", account_id=account_id, access_token=access_token)
 
-with socketserver.TCPServer(("", 3000), WebhookHandler) as httpd: # TCPサーバーを作成し、TCPサーバーのインスタンス(実際に動作するサーバー"httpd")を作成
+port = 8080 #実際のポート番号（ローカルホストの場合は8080）
+with socketserver.TCPServer(("", port), WebhookHandler) as httpd: # TCPサーバーを作成し、TCPサーバーのインスタンス(実際に動作するサーバー"httpd")を作成
     # ("", 3000)の""部分はネットワークインターフェース（ローカルIPアドレス）で接続を受け付けることを意味する
+    print("server is starting")
     httpd.serve_forever() # サーバーを永続的に動作させるメソッド。Ctrl+Cでプログラムを停止するまで、サーバーは動作し続ける。
