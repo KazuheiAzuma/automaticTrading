@@ -9,7 +9,7 @@ data ={
     "instrument": "USD/JPY",
     "units": "100",
     "side": "buy", 
-    "type": "market"
+    "type": "MARKET"
  }
 
 requests.post(url=url, json=data)
