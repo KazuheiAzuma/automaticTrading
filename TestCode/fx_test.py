@@ -66,9 +66,9 @@ class fx_trader: # FX取引を管理するためのクラス
         return
  
     def order(self, instrument, unit, side, type): # 新規注文の関数
-        self.logging("■■■新規注文処理 start")
-
         if self.longPositionUnits == 0 and self.shortPositionUnits == 0: # ポジションが0で新規注文
+            self.logging("■■■新規注文処理 start")
+
             self.data = { # 新規注文の内容
             "order": {
                 "instrument": instrument, # 取引通貨ペア(例：USD/JPY)
@@ -92,7 +92,7 @@ class fx_trader: # FX取引を管理するためのクラス
                 # 注文キャンセル
                 self.logging("注文キャンセル：{}".format(self.res.get("orderCancelTransaction").get("reason")))
         
-        self.logging("■■■新規注文処理 end")
+            self.logging("■■■新規注文処理 end")
         return
  
            
@@ -102,16 +102,16 @@ class fx_trader: # FX取引を管理するためのクラス
             data = {"longUnits": "ALL"} # ロング決済注文の内容
             
             # ロング決済注文
-            #self.r = positions.PositionClose(accountID=self.account_id, instrument=self.instrument, data=data)
-            #self.res = self.client.request(self.r) # self.clientでAPIと接続し、requestで送信
-            self.res = response_sample.closeLongRes #テスト用のレスポンス
+            self.r = positions.PositionClose(accountID=self.account_id, instrument=self.instrument, data=data)
+            self.res = self.client.request(self.r) # self.clientでAPIと接続し、requestで送信
+            #self.res = response_sample.closeLongRes #テスト用のレスポンス
             self.logging("レスポンス{}".format(self.res))
 
             # ロング決済注文のログを記録する
             self.logging("ロング決済：約定価格{}数量{}、損益{}です".format(
-                self.res.get("orderFillTransaction").get("price"), # 約定価格
-                self.res.get("orderFillTransaction").get("units"), # 決済した数量
-                self.res.get("orderFillTransaction").get("pl"), # (P/L)損益
+                self.res.get("longOrderFillTransaction").get("price"), # 約定価格
+                self.res.get("longOrderFillTransaction").get("units"), # 決済した数量
+                self.res.get("longOrderFillTransaction").get("pl"), # (P/L)損益
             ))
 
             self.logging("■■■ロング決済注文処理 end")                              
@@ -121,16 +121,16 @@ class fx_trader: # FX取引を管理するためのクラス
             data = {"shortUnits": "ALL"} # ショート決済注文の内容
             
             # ショート決済注文
-            # self.r = positions.PositionClose(accountID=self.account_id, instrument=self.instrument, data=data)
-            # self.res = self.client.request(self.r) # self.clientでAPIと接続し、requestで送信
-            self.res = response_sample.closeLongRes #テスト用のレスポンス
+            self.r = positions.PositionClose(accountID=self.account_id, instrument=self.instrument, data=data)
+            self.res = self.client.request(self.r) # self.clientでAPIと接続し、requestで送信
+            #self.res = response_sample.closeLongRes #テスト用のレスポンス
             self.logging("レスポンス{}".format(self.res))
             
             # ショート決済注文のログを記録する
             self.logging("ショート決済：約定価格{}数量{}、損益{}です".format(
-                self.res.get("orderFillTransaction").get("price"), # 約定価格
-                self.res.get("orderFillTransaction").get("units"), # 決済した数量
-                self.res.get("orderFillTransaction").get("pl"), # (P/L)損益
+                self.res.get("shortOrderFillTransaction").get("price"), # 約定価格
+                self.res.get("shortOrderFillTransaction").get("units"), # 決済した数量
+                self.res.get("shortOrderFillTransaction").get("pl"), # (P/L)損益
             ))
 
             self.logging("■■■ショート決済注文処理 end")
